@@ -4,13 +4,16 @@
 #' @param nfactors number of factors to be tested in EFA
 #' @param fit if 'TRUE' (default), model fit information will be extracted
 #' @param IC if 'TRUE' (default is 'FALSE'), information criterion will be provided, i.e. AIC, BIC, EBIC
-#' @param ...
+#' @param ... Further arguments passed to or from other methods.
 #'
 #' @return a regular factanal return list with fit indice added
 #' @export
 #'
 #' @examples
-#' factanal_fit(data, 1)
+#' test <- factanal_fit(MASS::mvrnorm(200, rep(0, 6), diag(6)), 1)
+#' test$fit_indices
+#' test <- factanal_fit(MASS::mvrnorm(200, rep(0, 6), diag(6)), 1, TRUE, TRUE)
+#' test$fit_indices
 factanal_fit <- function(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...) {
   factanal_results <- factanal(data_input, nfactors, ...)
   if (fit) {
@@ -51,7 +54,8 @@ factanal_fit <- function(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...) 
 #' @export
 #'
 #' @examples
-#' SRMR_factanal(stats::factanal(data, 3))
+#' data <- MASS::mvrnorm(200, rep(0, 6), diag(6))
+#' SRMR_factanal(stats::factanal(data, 1))
 SRMR_factanal <- function(factanal_results) {
   p <- length(factanal_results$uniquenesses)
   cor_implied <-  factanal_results$loadings %*% t(factanal_results$loadings)
@@ -72,12 +76,13 @@ SRMR_factanal <- function(factanal_results) {
 #' @export
 #'
 #' @examples
-#' factors(data)
+#' nfactors(MASS::mvrnorm(200, rep(0, 6), diag(6)))
 nfactors <- function(data_input) {
   # initialization
   EFA_results <- list()  # the results returned by factanal for all fitted models
   p <- ncol(data_input)
   max_m <- floor(p/2) - 3  # the maximum number of factors yet to test
+  max_m <- ifelse(max_m == 0, 1, max_m)
   # the collection of chi2_B, CFI, TLI and RMSEA for all fitted models
   results <- matrix(0, nrow = max_m, ncol = 4)
   # the cut_off values of chi_square test for all fitted models
@@ -107,7 +112,6 @@ nfactors <- function(data_input) {
                                                               14)]
   # sequential chi-square model test
   for (m in 1:max_m) {
-    # print(m)
     q <- p + p*m - m*(m - 1)/2
     df <- ((p - m)^2 - (p + m))/2
     EFA_results[[m]] <- factanal_fit(data_input, m, rotation = "none")
@@ -122,9 +126,10 @@ nfactors <- function(data_input) {
     }
   }
   # filter the converged solution and their corresponding cut-off value
-  results <- results[1:(m - 1), ]
+  if (m - 1 > 1) {
+    results <- results[1:(m - 1), ]
+  }
   cut_off_chisquare <- cut_off_chisquare[1:(m - 1), ]
-
   nfactors[1] <- min(which((results[, 1] < cut_off_chisquare) == TRUE))  # SMT
   nfactors[2] <- min(which(results[, 2] > 0.95))  # CFI
   nfactors[3] <- min(which(results[, 3] > 0.95))  # TLI
