@@ -1,11 +1,13 @@
 Package: yjc
-Title: Yujun's persoanl collection of functions.
+Title: Yujun's persoanl collection of functions
 Version: 0.0.0.9000
 Authors@R: 
     person("Yujun", "Li", , "liyujun_psy@qq.com", role = c("aut", "cre"),
            comment = c(ORCID = "http://orcid.org/0000-0002-0875-4195"))
 Description: Collect the functions I wrote for multiple purpose, inluding linear 
     algebra, statistics, some convenient function tools, equations I read in a paper, etc.
+Depends: R (>= 3.1.0)
+Imports: EFAtools
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
