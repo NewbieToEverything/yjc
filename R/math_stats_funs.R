@@ -6,6 +6,7 @@
 #' @export
 #'
 #' @examples
+#' cofactor(matrix(c(1, 2, 3, 10, 5, 0, 6, 7, 9), 3, 3))
 cofactor <- function(input) {
   if (!is.matrix(input)) {
     stop("The argument must be a matrix.")
@@ -68,3 +69,29 @@ mahalanobis_yujun <- function(x, Sigma = cov(x)) {
   x_centered <- x - matrix(colMeans(x), 1)[rep(1, nrow(x)), ]
   rowSums(x_centered %*% solve(Sigma) * x_centered)
 }
+
+
+#' Calculate a confident interval using the adjusted Wald method.
+#'
+#' Readers interested in more details about adjusted Wald confident interval
+#' are referred to [Calculating a Confidence Interval for Task Completion Using the Adjusted Wald Method](http://www.measuringux.com/AdjustedWald.htm#:~:text=The%20formula%20for%20calculating%20the%20Adjusted%20Wald%20confidence,the%20z-value%20corresponding%20to%20the%20desired%20confidence%20level).
+#' Firstly encountered in Herzog, Walter; Boomsma, Anne; Reinecke, Sven (2007): The Model-Size Effect on Traditional and Modified Tests of Covariance Structures. In Structural Equation Modeling: A Multidisciplinary Journal 14 (3), pp. 361–390. DOI: 10.1080/10705510701301602.
+#'
+#' @param p proportion of trials that were success
+#' @param n number of trials
+#' @param alpha desired confident level
+#'
+#' @return the adjusted Wald confident interval
+#' @export
+#'
+#' @examples
+#' ad_Wald_CI(0.8, 5, 0.025)
+ad_Wald_CI <- function(p = NULL, n = NULL, alpha = NULL) {
+  z <- qnorm(1 - alpha)
+  p_ad <- (n*p + z^2/2)/(n + z^2)
+  n_ad <- n + z^2
+  return(c(p_ad - z*sqrt(p_ad*(1 - p_ad)/n_ad),
+           p_ad + z*sqrt(p_ad*(1 - p_ad)/n_ad)))
+}
+
+
