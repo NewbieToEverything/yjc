@@ -7,12 +7,14 @@
 #' @param ... Further arguments passed to or from other methods.
 #'
 #' @return a regular factanal return list with fit indice added
+#' @importFrom stats factanal
 #' @export
 #'
 #' @examples
-#' test <- factanal_fit(MASS::mvrnorm(200, rep(0, 6), diag(6)), 1)
+#' require(MASS)
+#' test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1)
 #' test$fit_indices
-#' test <- factanal_fit(MASS::mvrnorm(200, rep(0, 6), diag(6)), 1, TRUE, TRUE)
+#' test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1, TRUE, TRUE)
 #' test$fit_indices
 factanal_fit <- function(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...) {
   factanal_results <- factanal(data_input, nfactors, ...)
@@ -54,8 +56,10 @@ factanal_fit <- function(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...) 
 #' @export
 #'
 #' @examples
-#' data <- MASS::mvrnorm(200, rep(0, 6), diag(6))
-#' SRMR_factanal(stats::factanal(data, 1))
+#' require(MASS)
+#' require(stats)
+#' data <- mvrnorm(200, rep(0, 6), diag(6))
+#' SRMR_factanal(factanal(data, 1))
 SRMR_factanal <- function(factanal_results) {
   p <- length(factanal_results$uniquenesses)
   cor_implied <-  factanal_results$loadings %*% t(factanal_results$loadings)
@@ -65,7 +69,7 @@ SRMR_factanal <- function(factanal_results) {
 }
 
 
-#' estimate the number of factors using 11 factor retention methods.
+#' Estimate the number of factors using 11 factor retention methods
 #'
 #' The 11 retention methods including chi square test (Bartlett test statistics),
 #' CFI, TLI, RMSEA, CD, EKC, CAF, HULL-CFI, HULL-RMSEA, KGC, PA.
@@ -76,7 +80,10 @@ SRMR_factanal <- function(factanal_results) {
 #' @export
 #'
 #' @examples
-#' nfactors(MASS::mvrnorm(200, rep(0, 6), diag(6)))
+#' require(MASS)
+#' nfactors(mvrnorm(200, rep(0, 6), diag(6)))
+#' @importFrom EFAtools N_FACTORS
+#` NULL
 nfactors <- function(data_input) {
   # initialization
   EFA_results <- list()  # the results returned by factanal for all fitted models
@@ -93,15 +100,15 @@ nfactors <- function(data_input) {
   # using the "N_FACTORS" function of "EFAtools" package to determine nfactors
   # methods used are comparison data, Hull method, Kaiser-Guttman criterion,
   #   parallel analysis.
-  EFAtools_results <- EFAtools::N_FACTORS(data_input,
-                                          method = "ULS",
-                                          eigen_type_HULL = "PCA",
-                                          eigen_type_other = "PCA",
-                                          criteria = c("CD",
-                                                       "EKC",
-                                                       "HULL",
-                                                       "KGC",
-                                                       "PARALLEL"))
+  EFAtools_results <- N_FACTORS(data_input,
+                                method = "ULS",
+                                eigen_type_HULL = "PCA",
+                                eigen_type_other = "PCA",
+                                criteria = c("CD",
+                                             "EKC",
+                                             "HULL",
+                                             "KGC",
+                                             "PARALLEL"))
   # remove unwanted results
   EFAtools_results$n_factors <- EFAtools_results$n_factors[-c(7,
                                                               8,

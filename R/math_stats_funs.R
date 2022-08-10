@@ -63,7 +63,8 @@ cor2cov <- function(R, sds){
 #' @export
 #'
 #' @examples
-#' data <- MASS::mvrnorm(100, rep(0, 2), matrix(c(1, 0.6, 0.6, 1), 2, 2))
+#' require(MASS)
+#' data <- mvrnorm(100, rep(0, 2), matrix(c(1, 0.6, 0.6, 1), 2, 2))
 #' mahalanobis_yujun(data)
 mahalanobis_yujun <- function(x, Sigma = cov(x)) {
   x_centered <- x - matrix(colMeans(x), 1)[rep(1, nrow(x)), ]
@@ -71,7 +72,7 @@ mahalanobis_yujun <- function(x, Sigma = cov(x)) {
 }
 
 
-#' Calculate a confident interval using the adjusted Wald method.
+#' Calculate a confident interval using the adjusted Wald method
 #'
 #' Readers interested in more details about adjusted Wald confident interval
 #' are referred to [Calculating a Confidence Interval for Task Completion Using the Adjusted Wald Method](http://www.measuringux.com/AdjustedWald.htm#:~:text=The%20formula%20for%20calculating%20the%20Adjusted%20Wald%20confidence,the%20z-value%20corresponding%20to%20the%20desired%20confidence%20level).
