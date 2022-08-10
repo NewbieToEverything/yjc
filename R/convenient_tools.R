@@ -31,7 +31,7 @@ round_off5 <- function(x, digits = 0) {
 }
 
 
-#' Convert int scalar to bit.
+#' Convert int scalar to bit
 #'
 #' @param x An int scalar object.
 #' @param signed If true (default), x is treated as a signed int.
