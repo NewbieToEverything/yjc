@@ -66,7 +66,7 @@ cor2cov <- function(R, sds){
 #' require(MASS)
 #' data <- mvrnorm(100, rep(0, 2), matrix(c(1, 0.6, 0.6, 1), 2, 2))
 #' mahalanobis_yujun(data)
-mahalanobis_yujun <- function(x, Sigma = cov(x)) {
+mahalanobis_yujun <- function(x, Sigma = stats::cov(x)) {
   x_centered <- x - matrix(colMeans(x), 1)[rep(1, nrow(x)), ]
   rowSums(x_centered %*% solve(Sigma) * x_centered)
 }
@@ -88,7 +88,7 @@ mahalanobis_yujun <- function(x, Sigma = cov(x)) {
 #' @examples
 #' ad_Wald_CI(0.8, 5, 0.025)
 ad_Wald_CI <- function(p = NULL, n = NULL, alpha = NULL) {
-  z <- qnorm(1 - alpha)
+  z <- stats::qnorm(1 - alpha/2)
   p_ad <- (n*p + z^2/2)/(n + z^2)
   n_ad <- n + z^2
   return(c(p_ad - z*sqrt(p_ad*(1 - p_ad)/n_ad),

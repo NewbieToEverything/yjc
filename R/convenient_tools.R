@@ -43,20 +43,23 @@ round_off5 <- function(x, digits = 0) {
 #' @examples
 #' intToBits_yujun(127)
 #' intToBits_yujun(255, FALSE)
-intToBits_yujun <- function(x, signed = TRUE, nbits = 8L) {
+intToBits_yujun <- function(x, signed = TRUE, nbits = 32L, char = TRUE) {
+  bits <- vector(mode = "integer", nbits)
   if (!is.integer(x) & !is.numeric(x)) stop("x should at least be an number.")
   sign_x <- sign(x)
+  x <- abs(x)
   if (!is.integer(x) & is.double(x)) {
     x <- trunc(abs(x))
     warning("x is not an integer object, and has been truncated.")
   }
 
-  if (x == 0L) return(x)
+  if (signed == TRUE) {
+    bits[1] <- ifelse(sign_x >= 0, 0, 1)
+  }
 
   upper <- ifelse(signed, 2L^nbits/2L - 1L, 2L^nbits - 1L)
   if (x > upper | x < (-1L * (upper + 1L))) stop("overflow occurred")
 
-  bits <- vector(mode = "integer", nbits)
 
   count <- 1L
   while (x != 0L) {
@@ -64,7 +67,11 @@ intToBits_yujun <- function(x, signed = TRUE, nbits = 8L) {
     x <- x %/% 2L
     count <- count + 1L
   }
-  return(paste(bits[-(1L:(nbits - count + 1L))], collapse = ""))
+  if (char) {
+    return(paste(bits, collapse = ""))
+  } else {
+    return(bits)
+  }
 }
 
 

@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' require(MASS)
+#' library(MASS)
 #' test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1)
 #' test$fit_indices
 #' test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1, TRUE, TRUE)
@@ -56,8 +56,8 @@ factanal_fit <- function(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...) 
 #' @export
 #'
 #' @examples
-#' require(MASS)
-#' require(stats)
+#' library(MASS)
+#' library(stats)
 #' data <- mvrnorm(200, rep(0, 6), diag(6))
 #' SRMR_factanal(factanal(data, 1))
 SRMR_factanal <- function(factanal_results) {
@@ -77,12 +77,13 @@ SRMR_factanal <- function(factanal_results) {
 #' @param data_input input data, should be either a matrix or dataframe
 #'
 #' @return a vector, containing the number of factors suggested by 11 retention methods
+#' @importFrom stats qchisq
+#' @importFrom EFAtools N_FACTORS
 #' @export
 #'
 #' @examples
-#' require(MASS)
+#' library(MASS)
 #' nfactors(mvrnorm(200, rep(0, 6), diag(6)))
-#' @importFrom EFAtools N_FACTORS
 #` NULL
 nfactors <- function(data_input) {
   # initialization
@@ -127,7 +128,7 @@ nfactors <- function(data_input) {
       results[m, 2] <- EFA_results[[m]]$fit_indices$CFI
       results[m, 3] <- EFA_results[[m]]$fit_indices$TLI
       results[m, 4] <- EFA_results[[m]]$fit_indices$RMSEA
-      cut_off_chisquare[m] <- stats::qchisq(0.95, df)
+      cut_off_chisquare[m] <- qchisq(0.95, df)
     } else {
       break
     }
