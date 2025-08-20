@@ -16,5 +16,8 @@ SRMR
 compute SRMR using factanal output
 }
 \examples{
-SRMR_factanal(stats::factanal(data, 3))
+library(MASS)
+library(stats)
+data <- mvrnorm(200, rep(0, 6), diag(6))
+SRMR_factanal(factanal(data, 1))
 }

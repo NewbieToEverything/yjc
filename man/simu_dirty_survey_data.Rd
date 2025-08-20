@@ -5,100 +5,119 @@
 \title{Generate contaminated survey data.}
 \usage{
 simu_dirty_survey_data(
-  scale_res = 5,
+  is_att_check = TRUE,
+  is_factor_structure = TRUE,
+  is_missing = TRUE,
+  is_outlier = TRUE,
+  is_recode = TRUE,
+  is_res_repeated = TRUE,
+  is_res_recur = TRUE,
+  is_speedness = TRUE,
+  is_time_res_total = TRUE,
+  lower_n_res_repeated = 5,
+  mu = rep(0, n_var),
+  mu_time_used_in_sec = round(n_var/3) * 60,
   n_examinee = 1000,
   n_var = 80,
-  seed = 123456,
-  mu = rep(0, n_var),
-  Sigma = matrix(rep(c(1, rep(0.5, n_var)), length.out = n_var^2), n_var, n_var),
-  range_age = c(20, 30),
-  is_valid_var = TRUE,
-  is_missing = TRUE,
-  is_repeated_res = TRUE,
-  is_recur_res = TRUE,
-  is_speed_res = TRUE,
-  prop_var_valid = 0.01,
-  value_var_valid = 4,
-  prop_examinee_fail_valid = 0.05,
-  prop_examinee_with_missing = 0.1,
-  value_var_missing = 999,
   n_straight_missing_max = 10,
-  prop_examinee_with_repeated_res = 0.1,
-  n_repeated_res_lower = 5,
-  n_repeated_res_upper = 10,
-  prop_examinee_with_recur_res = 0.1,
   pattern_recur_res = rep(c(2, 3, 4), length.out = 12),
-  mu_time_used_in_sec = round(n_var/3) * 60,
-  prop_examinee_with_speed_res = 0.1,
-  value_var_speed_upper = round(mu_time_used_in_sec/3)
+  prop_att_check = 0.03,
+  prop_examinee_fail_att_check = 0.05,
+  prop_examinee_with_missing = 0.1,
+  prop_examinee_with_repeated_res = 0.1,
+  prop_examinee_with_recur_res = 0.1,
+  prop_examinee_with_speedness = 0.1,
+  prop_outlier = 0.05,
+  prop_recode = 0.03,
+  range_age = c(20, 30),
+  scale_res = 5,
+  seed = 123456,
+  Sigma = matrix(rep(c(1, rep(0.5, n_var)), length.out = n_var^2), n_var, n_var),
+  tag_missing = NA,
+  upper_n_res_repeated = 10,
+  upper_time_speedness = round(mu_time_used_in_sec/3)
 )
 }
 \arguments{
-\item{scale_res}{the scale of response, the default is 5 level likert.}
+\item{is_att_check}{a logical value (\code{TRUE}, default) to indicate whether there is attention check in generated data.}
+
+\item{is_factor_structure}{a logical value (\code{TRUE}, default) to indicate whether there is underlying factor structure.}
+
+\item{is_missing}{a logical value (\code{TRUE}, default) to indicate whether there is missing data in generated data.}
+
+\item{is_outlier}{a logical value (\code{TRUE}, default) to indicate whether there is outlier.}
+
+\item{is_recode}{a logical value (\code{TRUE}, default) to indicate whether there is variable that need to be recoded.}
+
+\item{is_res_repeated}{a logical value (\code{TRUE}, default) to indicate whether there is repeated data in generated data.}
+
+\item{is_res_recur}{a logical value (\code{TRUE}, default) to indicate whether there is recurrent data in generated data.}
+
+\item{is_speedness}{a logical value (\code{TRUE}, default) to indicate whether there is speedness in generated data.}
+
+\item{is_time_res_total}{a logical value (\code{TRUE}, default) to indicate whether the response time is summed.}
+
+\item{lower_n_res_repeated}{a positive integer to indicate the lower bound of the number of repeated response for one examinee, the default is 5.}
+
+\item{mu}{a positive vector used to generate response data from multivariate normal distribution, the default is \boldsymboal(0).}
+
+\item{mu_time_used_in_sec}{a positive integer to indicate the average time (in second) used to answer all the questions, the default is \code{round(n_var/3)*60}, assuming that on average, one examinee can answer 3 variables in 1 minute.}
 
 \item{n_examinee}{a positive integer to indicate how many examinees in total, the default is 1000.}
 
 \item{n_var}{a positive integer to indicate how many variables in total, the default is 80.}
 
-\item{seed}{a positive integer used in \code{set.seed()}, the default is 123456.}
-
-\item{mu}{a positive vector used to generate response data from multivariate normal distribution, the default is \boldsymboal(0).}
-
-\item{Sigma}{a correlation matrix used to generate response data from multivariate normal distribution, the defaults correlation matrix has identical intervariable correlation = 0.5.}
-
-\item{range_age}{a vector specify the lower bound and upper bound of the age to simulate.}
-
-\item{is_valid_var}{a logical value (TRUE, default) to indicate whether there is validity measure in generated data.}
-
-\item{is_missing}{a logical value (TRUE, default) to indicate whether there is missing data in generated data.}
-
-\item{is_repeated_res}{a logical value (TRUE, default) to indicate whether there is repeated data in generated data.}
-
-\item{is_recur_res}{a logical value (TRUE, default) to indicate whether there is recurrent data in generated data.}
-
-\item{is_speed_res}{a logical value (TRUE, default) to indicate whether there is speedness in generated data.}
-
-\item{prop_var_valid}{a positive double to indicate the proportion of variables in the validity measure, the default is 0.01.}
-
-\item{value_var_valid}{a positive integer to indicate the correct answer of validity measure, the default is 4 for a 5-level likert scale.}
-
-\item{prop_examinee_fail_valid}{a positive double to indicate the proportion of examinees who fail in the validity measure, the default is 0.05.}
-
-\item{prop_examinee_with_missing}{a positive double to indicate the proportion of examinees that have missing data, the default is 0.1.}
-
-\item{value_var_missing}{a positive integer to indicate missing label (rather than \code{NA}), the default is 999.}
-
 \item{n_straight_missing_max}{a positive integer to indicate the maximum number of missing for one examinee, the default is 10.}
-
-\item{prop_examinee_with_repeated_res}{a positive double to indicate the proportion of examinees with repeated response, the default is 0.1.}
-
-\item{n_repeated_res_lower}{a positive integer to indicate the lower bound of the number of repeated response for one examinee, the default is 5.}
-
-\item{n_repeated_res_upper}{a positive integer to indicate the upper bound of the number of repeated response for one examinee, the default is 10.}
-
-\item{prop_examinee_with_recur_res}{a positive double to indicate the proportion of examinee with recurrent response, the default is 0.1.}
 
 \item{pattern_recur_res}{a positive integer vector to indicate the pattern of recurrent response, the default is \code{c(2, 3, 4)} repeated 4 times.}
 
-\item{mu_time_used_in_sec}{a positive integer to indicate the average time (in second) used to answer all the questions, the default is \code{round(n_var/3)*60}, assuming that on average, one examinee can answer 3 variables in 1 minute.}
+\item{prop_att_check}{a positive double to indicate the proportion of variables in the attention check, the default is 0.01.}
 
-\item{prop_examinee_with_speed_res}{a positive double to indicate the proportion of examinee with speedness, the default is 0.1.}
+\item{prop_examinee_fail_att_check}{a positive double to indicate the proportion of examinees who fail in the attention check, the default is 0.05.}
 
-\item{value_var_speed_upper}{a positive integer to indicate the upper bound of the time that examinee with speedness used to answer all questions, the default is 1/3 of \code{mu_time_used_in_sec}.}
+\item{prop_examinee_with_missing}{a positive double to indicate the proportion of examinees that have missing data, the default is 0.1.}
+
+\item{prop_examinee_with_repeated_res}{a positive double to indicate the proportion of examinees with repeated response, the default is 0.1.}
+
+\item{prop_examinee_with_recur_res}{a positive double to indicate the proportion of examinee with recurrent response, the default is 0.1.}
+
+\item{prop_examinee_with_speedness}{a positive double to indicate the proportion of examinee with speedness, the default is 0.1.}
+
+\item{prop_outlier}{a positive double to indicate the proportion of outlier, the default is 0.05.}
+
+\item{prop_recode}{a positive double to indicate the proportion of variables that need to be recoded.}
+
+\item{range_age}{a vector specify the lower bound and upper bound of the age to simulate.}
+
+\item{scale_res}{the scale of response, the default is 5 level likert.}
+
+\item{seed}{a positive integer used in \code{set.seed()}, the default is 123456.}
+
+\item{Sigma}{a correlation matrix used to generate response data from multivariate normal distribution, the defaults correlation matrix has identical intervariable correlation = 0.5.}
+
+\item{tag_missing}{missing label (\code{NA}, default).}
+
+\item{upper_n_res_repeated}{a positive integer to indicate the upper bound of the number of repeated response for one examinee, the default is 10.}
+
+\item{upper_time_speedness}{a positive integer to indicate the upper bound of the time that examinee with speedness used to answer all questions, the default is 1/3 of \code{mu_time_used_in_sec}.}
 }
 \value{
 a data.frame containing generated data.
 }
 \description{
-Contamination include missing, validity measure failure, repeated response, recurrent response, and speedness. Data are generated using multivariate normal distribution with given \mu and \Sigma correlation matrix.
+Contamination include missing, attention check failure, repeated response, recurrent response, and speedness. Data are generated using multivariate normal distribution with given \mu and \Sigma correlation matrix.
 }
 \details{
 This function can simulate five types of data contamination. When generating different types of contaminated data, the examinees are sampled separately, implying that the response pattern of one single examinee can contain all four types.
 
-For validity measure, the validity variables present in the 2nd half of all variables.
+For attention check, the validity variables present in the 2nd half of all variables.
+
 For missing data, less missing point is more likely to appear than more missing point.
+
 For repeated data, the number of repeated data point for one examinee is randomly selected from a given range.
+
 For recurrent data, the pattern is fixed.
+
 For speedness, response time that is closer to the prespecified upper bound enjoys higher probability when sampling.
 }
 \examples{

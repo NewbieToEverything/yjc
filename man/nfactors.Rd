@@ -2,7 +2,7 @@
 % Please edit documentation in R/efa_functions.R
 \name{nfactors}
 \alias{nfactors}
-\title{estimate the number of factors using 11 factor retention methods.}
+\title{Estimate the number of factors using 11 factor retention methods}
 \usage{
 nfactors(data_input)
 }
@@ -17,5 +17,6 @@ The 11 retention methods including chi square test (Bartlett test statistics),
 CFI, TLI, RMSEA, CD, EKC, CAF, HULL-CFI, HULL-RMSEA, KGC, PA.
 }
 \examples{
-factors(data)
+library(MASS)
+nfactors(mvrnorm(200, rep(0, 6), diag(6)))
 }

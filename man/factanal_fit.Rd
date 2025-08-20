@@ -15,7 +15,7 @@ factanal_fit(data_input, nfactors = 1, fit = TRUE, IC = FALSE, ...)
 
 \item{IC}{if 'TRUE' (default is 'FALSE'), information criterion will be provided, i.e. AIC, BIC, EBIC}
 
-\item{...}{}
+\item{...}{Further arguments passed to or from other methods.}
 }
 \value{
 a regular factanal return list with fit indice added
@@ -24,5 +24,9 @@ a regular factanal return list with fit indice added
 EFA using fit indices, a wrapper of 'stats::factanal'
 }
 \examples{
-factanal_fit(data, 1)
+library(MASS)
+test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1)
+test$fit_indices
+test <- factanal_fit(mvrnorm(200, rep(0, 6), diag(6)), 1, TRUE, TRUE)
+test$fit_indices
 }
